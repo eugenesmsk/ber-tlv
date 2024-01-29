@@ -29,8 +29,8 @@ public class BerTag {
         bytes = new byte[]{(byte) (aFirstByte), (byte) aSecondByte, (byte) aFirth};
     }
 
-    public BerTag(int aFirstByte) {
-        bytes = new byte[]{(byte) aFirstByte};
+    public BerTag(int tag) {
+        bytes = intToByteArray(tag);
     }
 
     public boolean isConstructed() {
@@ -45,7 +45,6 @@ public class BerTag {
         BerTag berTag = (BerTag) o;
 
         return Arrays.equals(bytes, berTag.bytes);
-
     }
 
     @Override
@@ -56,6 +55,15 @@ public class BerTag {
     @Override
     public String toString() {
         return (isConstructed() ? "+ " : "- ") + HexUtil.toHexString(bytes, 0, bytes.length);
+    }
+
+    public static byte[] intToByteArray(int value) {
+        int byteCount = (Integer.SIZE - Integer.numberOfLeadingZeros(value) + 7) / 8;
+        byte[] byteArray = new byte[byteCount];
+        for (int i = 0; i < byteCount; i++) {
+            byteArray[byteCount - i - 1] = (byte) (value >> (i * 8));
+        }
+        return byteArray;
     }
 }
 
