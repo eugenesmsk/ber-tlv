@@ -71,4 +71,16 @@ public class HexUtil {
         return new String(dst);
     }
 
+    public static String toHexLength(int length) {
+        if (length < 0x80) {
+            return String.format("%02X", length);
+        } else if (length <= 0xFF) {
+            return "81" + String.format("%02X", length);
+        } else if (length <= 0xFFFF) {
+            return "82" + String.format("%04X", length);
+        } else {
+            throw new IllegalArgumentException("Length more than 65535 is not supported in this method");
+        }
+    }
+
 }

@@ -172,4 +172,23 @@ public class BerTlv {
                 '}';
     }
 
+    public String getConstructedHexValue() {
+        StringBuilder constructedValueBuilder = new StringBuilder();
+
+        for (BerTlv tlv : getValues()) {
+            constructedValueBuilder.append(HexUtil.toHexString(tlv.getTag().bytes));
+
+            if (tlv.isConstructed()) {
+                String innerConstructedValue = tlv.getConstructedHexValue();
+                constructedValueBuilder.append(HexUtil.toHexLength(innerConstructedValue.length() / 2));
+                constructedValueBuilder.append(innerConstructedValue);
+            } else {
+                constructedValueBuilder.append(HexUtil.toHexLength(tlv.getBytesValue().length));
+                constructedValueBuilder.append(HexUtil.toHexString(tlv.getBytesValue()));
+            }
+        }
+
+        return constructedValueBuilder.toString();
+    }
+
 }
